@@ -9,20 +9,16 @@ import { scaleSize } from '../constants/Layout';
 
 const Stock = (props) => {
   let colorToggle;
-  (props.open/props.close)>0?colorToggle={backgroundColor:'#33cc33',textAlign:'center',borderRadius:5}:colorToggle={backgroundColor:'#ff0000',paddingLeft:2, textAlign:'center',borderRadius:5};
+  (props.close>props.open)?colorToggle={backgroundColor:'#33cc33',textAlign:'center',borderRadius:10}:colorToggle={backgroundColor:'#ff0000',paddingLeft:2, textAlign:'center',borderRadius:10};
   return (
     <TouchableOpacity
-      style={{  paddingHorizontal: 17, paddingVertical: 12, borderRadius: 4, alignItems: "flex-start", justifyContent: "center", marginBottom: 4,height:50 }}
-      onPress={()=>props.bottom({high:props.high, low:props.low, open:props.open, close:props.close, volume:props.volume})}
+      style={styles.Stock}
+      onPress={()=>props.bottom({high:props.high, low:props.low, open:props.open, close:props.close, volume:props.volume,name:props.name})}
     >
-        <View  style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-          }}>
+        <View  style={styles.StockItem}>
         <View style={{width:'50%'}}><Text style={{color:"#ffffff"}}>{props.symbol} </Text></View>
-        <View style={{width:'25%'}}><Text style={{color:"#ffffff"}}>{props.close}</Text></View>
-        <View style={{width:'25%',paddingLeft:'5%'}}><Text style={colorToggle}>{`${(props.open/props.close).toFixed(2)}%`}</Text></View>
+        <View style={{width:'20%'}}><Text style={{color:"#ffffff"}}>{props.close}</Text></View>
+        <View style={{width:'30%',borderRadius:10,paddingLeft:'5%'}}><Text style={colorToggle}>{`${props.close>props.open?'':'-'}${(props.close/props.open).toFixed(2)}%`}</Text></View>
       </View>
         
       
@@ -36,41 +32,38 @@ const Stock = (props) => {
 export default function StocksScreen({route}) {
   const { ServerURL, watchList } = useStocksContext();
   const [state, setState] = useState([]);
-  const [stockinfo, setStockinfo] = useState({open:'',close:'',high:'',low:'',volume:''})
+  const [stockinfo, setStockinfo] = useState({open:'',close:'',high:'',low:'',volume:'',name:''})
 
   // can put more code here
 
   useEffect(() => {
     // FixMe: fetch stock data from the server for any new symbols added to the watchlist and save in local StocksScreen state  
-    let SymbolArray=[];
-    //console.warn(watchList)
-
-    // Promise.all(watchList.map(url =>fetch(`http://131.181.190.87:3001/history?symbol=${url}`)))
-    // .then(responses => Promise.all(responses.map(res => res.json())))
-    // .then(texts => {
-    //   setState(texts[0])
-    // })
-
+   
+    
     Promise.all( watchList.map(url=>
       fetch(`http://131.181.190.87:3001/history?symbol=${url}`)
       .then(res=>res.json())
       .then(data=> {
-        SymbolArray.push(data[0])
+        return data[0]
       })
-    )).then(values =>setState(SymbolArray));
+    )).then(values =>{
+      // console.warn(values);
+      setState(values)
+    });
     
   
     
   }, [watchList]);
 
   const value = (stock) => {
-   
+
     setStockinfo({
       open:stock.open,
       close:stock.close,
       high:stock.high,
       low:stock.low,
-      volume:stock.volume
+      volume:stock.volume,
+      name:stock.name
     })
 
   }
@@ -83,15 +76,16 @@ export default function StocksScreen({route}) {
       justifyContent:'flex-start'}}>
       {state.map(i=><Stock symbol={i.symbol} key={i.name} name={i.name} close={i.close} open={i.open} high={i.high} low={i.low} volume={i.volumes} bottom={value}/>)} 
       <View style={styles.panel}>
-         <View style={{flex: 1, flexDirection: 'row', borderBottomColor:'#ffffff',borderBottomWidth:'2em',marginTop:'2.5%',marginBottom:'2.5%'}}>
-            <View style={{width:'45%',marginLeft:'5%'}}><Text style={{color:'#ffffff'}}>Open: {stockinfo.open}</Text></View>
-            <View style={{width:'45%',marginLeft:'5%'}}><Text style={{color:'#ffffff'}}>Close: {stockinfo.close}</Text></View>
+        <View style={styles.panelTitle}><Text style={styles.Textcolor}>{stockinfo.name}</Text></View>
+         <View style={{flex: 1, flexDirection: 'row', borderTopColor:'#ffffff',borderTopWidth:'2em',borderBottomColor:'#ffffff',borderBottomWidth:'2em',marginTop:'1%',marginBottom:'1%',paddingTop:1}}>
+            <View style={styles.Textbox}><Text style={styles.Textcolor}>Open: {stockinfo.open}</Text></View>
+            <View style={styles.Textbox}><Text style={styles.Textcolor}>Close: {stockinfo.close}</Text></View>
           </View>
-          <View style={{flex: 1, flexDirection: 'row', borderBottomColor:'#ffffff',borderBottomWidth:'2em',marginTop:'2.5%',marginBottom:'2.5%'}}>
-          <View style={{width:'45%',marginLeft:'5%'}}><Text style={{color:'#ffffff'}}>High: {stockinfo.high}</Text></View>
-          <View style={{width:'45%',marginLeft:'5%'}}><Text style={{color:'#ffffff'}}>Low: {stockinfo.low}</Text></View>
+          <View style={{flex: 1, flexDirection: 'row', borderBottomColor:'#ffffff',borderBottomWidth:'2em',marginTop:'1%',marginBottom:'1%'}}>
+          <View style={styles.Textbox}><Text style={styles.Textcolor}>High: {stockinfo.high}</Text></View>
+          <View style={styles.Textbox}><Text style={styles.Textcolor}>Low: {stockinfo.low}</Text></View>
         </View>
-        <Text style={{width:'100%',paddingLeft:'5%',marginTop:'2.5%',marginBottom:'2.5%',color:'#ffffff'}}>Volume: {stockinfo.volume}</Text>
+        <Text style={styles.finalText}>Volume: {stockinfo.volume}</Text>
           
        </View>
      
@@ -103,6 +97,23 @@ export default function StocksScreen({route}) {
 const styles = StyleSheet.create({
   // FixMe: add styles here ...
   // use scaleSize(x) to adjust sizes for small/large screens
+  Textcolor:{
+    color:'#ffffff'
+  },
+  Textbox:{
+    width:'45%',
+    marginLeft:'5%'
+  },
+  finalText:{
+    width:'100%',
+    paddingLeft:'5%',
+    marginTop:'2.5%',
+    marginBottom:'2.5%',
+    color:'#ffffff'
+  },
+  panelTitle:{
+    padding:1
+  },
   panel:{
     width:'100%',
     height:'25%',
@@ -112,8 +123,20 @@ const styles = StyleSheet.create({
     position:'absolute',
     bottom:0,
     borderTopWidth: 2,
-    borderTopColor: '#ffffff'
-
+  },
+  Stock:{
+    paddingHorizontal: scaleSize(17), 
+    paddingVertical: scaleSize(12), 
+    borderRadius: 4, 
+    alignItems: "flex-start", 
+    justifyContent: "center", 
+    marginBottom: 4,
+    height:scaleSize(50)
+  },
+  StockItem:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   }
 
   });
