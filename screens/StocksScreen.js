@@ -77,18 +77,18 @@ export default function StocksScreen({route}) {
       {state.map(i=><Stock symbol={i.symbol} key={i.name} name={i.name} close={i.close} open={i.open} high={i.high} low={i.low} volume={i.volumes} bottom={value}/>)} 
       <View style={styles.panel}>
         <View style={styles.panelTitle}><Text style={styles.Textcolor}>{stockinfo.name}</Text></View>
-         <View style={{flex: 1, flexDirection: 'row', borderTopColor:'#ffffff',borderTopWidth:'2em',borderBottomColor:'#ffffff',borderBottomWidth:'2em',marginTop:'1%',marginBottom:'1%',paddingTop:1}}>
+         <View style={{flex: 1, flexDirection: 'row', borderTopColor:'#ffffff',borderTopWidth:1,borderBottomColor:'#ffffff',borderBottomWidth:1,marginTop:1,marginBottom:1,paddingTop:1}}>
             <View style={styles.Textbox}><Text style={styles.Textcolor}>Open: {stockinfo.open}</Text></View>
             <View style={styles.Textbox}><Text style={styles.Textcolor}>Close: {stockinfo.close}</Text></View>
           </View>
-          <View style={{flex: 1, flexDirection: 'row', borderBottomColor:'#ffffff',borderBottomWidth:'2em',marginTop:'1%',marginBottom:'1%'}}>
+          <View style={{flex: 1, flexDirection: 'row', borderBottomColor:'#ffffff',borderBottomWidth:1,marginTop:1,marginBottom:1}}>
           <View style={styles.Textbox}><Text style={styles.Textcolor}>High: {stockinfo.high}</Text></View>
           <View style={styles.Textbox}><Text style={styles.Textcolor}>Low: {stockinfo.low}</Text></View>
         </View>
         <Text style={styles.finalText}>Volume: {stockinfo.volume}</Text>
           
-       </View>
-     
+       </View> 
+      
       
       </View>
   );
@@ -101,22 +101,22 @@ const styles = StyleSheet.create({
     color:'#ffffff'
   },
   Textbox:{
-    width:'45%',
-    marginLeft:'5%'
+    width:scaleSize(150),
+    marginLeft:5
   },
   finalText:{
-    width:'100%',
-    paddingLeft:'5%',
-    marginTop:'2.5%',
-    marginBottom:'2.5%',
+    width:scaleSize(310),
+    paddingLeft:5,
+    marginTop:2,
+    marginBottom:2,
     color:'#ffffff'
   },
   panelTitle:{
     padding:1
   },
   panel:{
-    width:'100%',
-    height:'25%',
+    width:scaleSize(375),
+    height:scaleSize(100),
     backgroundColor:"#000000",
     justifyContent:'center',
     alignItems:'center',
