@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Text, StyleSheet, View, TouchableWithoutFeedback, Keyboard ,TextInput,TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, View, TouchableWithoutFeedback, Keyboard ,TextInput,TouchableOpacity,ScrollView } from 'react-native';
 import { useStocksContext } from '../contexts/StocksContext';
 import { scaleSize } from '../constants/Layout';
 import { Ionicons } from '@expo/vector-icons';
@@ -86,7 +86,7 @@ export default function SearchScreen({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <ScrollView View style={styles.container}>
       <SearchBar search={searchFilter}/>
        
        {shownull ===''?<Text></Text>:
@@ -108,7 +108,7 @@ export default function SearchScreen({ navigation }) {
                        }}
                       />)}
      
-      </View>
+      </ScrollView >
     </TouchableWithoutFeedback>    
   )
 }

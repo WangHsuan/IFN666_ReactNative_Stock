@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View ,Text, TouchableOpacity/* include other react-native components here as needed */ } from 'react-native';
+import { StyleSheet, View ,Text, TouchableOpacity, ScrollView /* include other react-native components here as needed */ } from 'react-native';
 import { useStocksContext } from '../contexts/StocksContext';
 import { scaleSize } from '../constants/Layout';
 
@@ -15,12 +15,12 @@ const Stock = (props) => {
       style={styles.Stock}
       onPress={()=>props.bottom({high:props.high, low:props.low, open:props.open, close:props.close, volume:props.volume,name:props.name})}
     >
+      
         <View  style={styles.StockItem}>
         <View style={{width:'50%'}}><Text style={{color:"#ffffff"}}>{props.symbol} </Text></View>
         <View style={{width:'20%'}}><Text style={{color:"#ffffff"}}>{props.close}</Text></View>
         <View style={{width:'30%',borderRadius:10,paddingLeft:'5%'}}><Text style={colorToggle}>{`${props.close>props.open?'':'-'}${(props.close/props.open).toFixed(2)}%`}</Text></View>
       </View>
-        
       
     </TouchableOpacity>
   );
@@ -69,12 +69,15 @@ export default function StocksScreen({route}) {
   }
 
   return (
+   
     <View style={{
       height:'100%',
       flex:1,
       alignItems:'center',
       justifyContent:'flex-start'}}>
+       <ScrollView style={styles.scroll} >
       {state.map(i=><Stock symbol={i.symbol} key={i.name} name={i.name} close={i.close} open={i.open} high={i.high} low={i.low} volume={i.volumes} bottom={value}/>)} 
+      </ScrollView>
       <View style={styles.panel}>
         <View style={styles.panelTitle}><Text style={styles.Textcolor}>{stockinfo.name}</Text></View>
          <View style={{flex: 1, flexDirection: 'row', borderTopColor:'#ffffff',borderTopWidth:1,borderBottomColor:'#ffffff',borderBottomWidth:1,marginTop:1,marginBottom:1,paddingTop:1}}>
@@ -91,6 +94,7 @@ export default function StocksScreen({route}) {
       
       
       </View>
+     
   );
 }
 
@@ -123,6 +127,7 @@ const styles = StyleSheet.create({
     position:'absolute',
     bottom:0,
     borderTopWidth: 2,
+    zIndex: 1
   },
   Stock:{
     paddingHorizontal: scaleSize(17), 
