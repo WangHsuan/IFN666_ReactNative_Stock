@@ -14,7 +14,7 @@ const SearchBar = (props) =>{
 
   return (
     
-    <View style={{flexDirection: 'row',width:'100%',justifyContent:'flex-start',marginTop:5}}>
+    <View style={styles.SearchContainer}>
       <EvilIcons name="search" size={24} color="white" style={styles.searchIcon} />
       <TextInput
         style={styles.searchBar}
@@ -23,7 +23,8 @@ const SearchBar = (props) =>{
           props.search(text)
         } }
         value={value}
-        
+        placeholder="Search"
+        placeholderTextColor="white"
       />
     
     </View>
@@ -87,6 +88,7 @@ export default function SearchScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView View style={styles.container}>
+      <Text style={styles.SearchTitle}>Type a company name or stock symbol:</Text>
       <SearchBar search={searchFilter}/>
        
        {shownull ===''?<Text></Text>:
@@ -119,13 +121,25 @@ const styles = StyleSheet.create({
 searchIcon: {
   padding: 10,
 },
+SearchTitle:{
+  color:"#ffffff",
+  fontSize:12,
+  textAlign:"center"
+},
+SearchContainer:{
+  flexDirection: 'row',
+  width:scaleSize(375),
+  justifyContent:'flex-start',
+  marginTop:5,
+  backgroundColor:"rgba(230,230,230,0.2)",
+  borderColor: 'rgba(50,50,50,0.3)', 
+  borderWidth: scaleSize(1),
+  borderRadius:10
+},
 searchBar:{
   color:"#ffffff", 
   height: scaleSize(40), 
-  borderColor: 'gray', 
-  borderWidth: scaleSize(1),
-  width:scaleSize(300),
-  borderRadius:10
+  width:scaleSize(300)
 },
 
 addStockList:{
@@ -134,7 +148,9 @@ addStockList:{
   borderRadius: scaleSize(4), 
   alignItems: "flex-start", 
   justifyContent: "center", 
-  marginBottom: scaleSize(4)
+  marginBottom: scaleSize(4),
+  borderBottomWidth:1,
+  borderBottomColor:'rgba(230,230,230,0.2)'
 },
 StockText:{
   color:"#ffffff"
